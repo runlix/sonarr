@@ -15,6 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && mkdir -p /app/bin \
  && curl -L -f "${AMD64_URL}" -o sonarr.tar.gz \
  && tar -xzf sonarr.tar.gz -C /app/bin --strip-components=1 \
+ && echo "DEBUG: Contents of /app:" && ls -la /app \
+ && echo "DEBUG: Contents of /app/bin:" && ls -la /app/bin \
+ && echo "DEBUG: Sonarr binary:" && ls -lh /app/bin/Sonarr 2>&1 || echo "DEBUG: Sonarr binary not found in /app/bin" \
+ && find /app -name "Sonarr" -type f 2>&1 || echo "DEBUG: Sonarr binary not found anywhere" \
+ && chmod +x /app/bin/Sonarr 2>&1 || echo "DEBUG: Failed to chmod Sonarr" \
  && rm sonarr.tar.gz
 
 # STAGE 2 — install Sonarr-specific runtime packages
