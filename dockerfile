@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     tar \
+    file \
+    binutils \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /app/bin \
  && curl -L -f "${AMD64_URL}" -o sonarr.tar.gz \
@@ -18,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && tar -xzf sonarr.tar.gz -C /app/bin --strip-components=1 \
  && echo "DEBUG: Contents of /app/bin after extraction:" && ls -la /app/bin | head -20 \
  && echo "DEBUG: Looking for Sonarr binary:" && find /app -name "Sonarr" -type f 2>&1 || echo "DEBUG: Sonarr not found" \
+ && echo "DEBUG: Binary file type:" && file /app/bin/Sonarr 2>&1 || echo "DEBUG: file command failed" \
+ && echo "DEBUG: Binary interpreter:" && readelf -l /app/bin/Sonarr 2>&1 | grep -A 1 "interpreter" || echo "DEBUG: readelf failed" \
+ && echo "DEBUG: Binary dependencies:" && ldd /app/bin/Sonarr 2>&1 || echo "DEBUG: ldd failed (might be static or missing libs)" \
  && chmod +x /app/bin/Sonarr 2>&1 || echo "DEBUG: Failed to chmod Sonarr" \
  && rm sonarr.tar.gz
 
