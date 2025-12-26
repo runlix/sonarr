@@ -15,11 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && mkdir -p /app/bin \
  && curl -L -f "${AMD64_URL}" -o sonarr.tar.gz \
  && tar -xzf sonarr.tar.gz -C /app/bin --strip-components=1 \
- && echo "DEBUG: Contents of /app:" && ls -la /app \
- && echo "DEBUG: Contents of /app/bin:" && ls -la /app/bin \
- && echo "DEBUG: Sonarr binary:" && ls -lh /app/bin/Sonarr 2>&1 || echo "DEBUG: Sonarr binary not found in /app/bin" \
- && find /app -name "Sonarr" -type f 2>&1 || echo "DEBUG: Sonarr binary not found anywhere" \
- && chmod +x /app/bin/Sonarr 2>&1 || echo "DEBUG: Failed to chmod Sonarr" \
+ && chmod +x /app/bin/Sonarr \
  && rm sonarr.tar.gz
 
 # STAGE 2 — install Sonarr-specific runtime packages
@@ -46,8 +42,8 @@ COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libswscale.so.* /usr/lib/x86_6
 COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libmediainfo.so.* /usr/lib/x86_64-linux-gnu/
 COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libzen.so.* /usr/lib/x86_64-linux-gnu/
 
-WORKDIR /app
+WORKDIR /app/bin
 
 USER 65532:65532
 
-ENTRYPOINT ["/app/bin/Sonarr"]
+ENTRYPOINT ["./Sonarr"]
