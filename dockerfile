@@ -1,7 +1,7 @@
 # STAGE 1 — fetch Sonarr binaries
 FROM debian:bookworm-slim AS fetch
 
-ARG SONARR_VERSION=4.0.16.2944
+ARG VERSION
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
  && rm -rf /var/lib/apt/lists/* \
- && curl -L "https://services.sonarr.tv/v1/download/main/${SONARR_VERSION}?version=linux" \
+ && curl -L "https://services.sonarr.tv/v1/download/main/${VERSION}?version=linux" \
       -o sonarr.zip \
  && unzip sonarr.zip -d /app \
  && rm sonarr.zip
