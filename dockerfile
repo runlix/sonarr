@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm sonarr.zip
 
 # STAGE 2 — distroless final image
-FROM ghcr.io/runlix/media-distroless-runtime:release
+FROM ghcr.io/runlix/distroless-runtime:release
 
 COPY --from=fetch /app /app
 
