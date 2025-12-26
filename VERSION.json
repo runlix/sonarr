@@ -1,6 +1,6 @@
 {
-  "VERSION": "4.0.16.2944",
-  "SBRANCH": "main",
-  "AMD64_URL": "https://services.sonarr.tv/v1/download/main/4.0.16.2944?version=linux"
+  "version": "4.0.16.2944",
+  "sbranch": "main",
+  "amd64_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-musl-x64.tar.gz"
 }
 
