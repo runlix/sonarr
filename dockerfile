@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && curl -L -f "${DOWNLOAD_URL}" -o sonarr.tar.gz \
  && echo "DEBUG: File size after download:" \
  && ls -lh sonarr.tar.gz \
- && file sonarr.tar.gz \
  && tar -xzf sonarr.tar.gz -C /app --strip-components=1 \
  && rm sonarr.tar.gz
 
