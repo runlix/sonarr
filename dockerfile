@@ -46,8 +46,8 @@ COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libswscale.so.* /usr/lib/x86_6
 COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libmediainfo.so.* /usr/lib/x86_64-linux-gnu/
 COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libzen.so.* /usr/lib/x86_64-linux-gnu/
 
-WORKDIR /app/bin
+WORKDIR /app
 
 USER 65532:65532
 
-ENTRYPOINT ["./Sonarr"]
+ENTRYPOINT ["/app/bin/Sonarr"]
