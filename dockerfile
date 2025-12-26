@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sqlite3 \
     ffmpeg \
     mediainfo \
+    file \
+    binutils \
  && rm -rf /var/lib/apt/lists/*
 
 # STAGE 3 — distroless final image
