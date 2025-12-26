@@ -60,4 +60,4 @@ WORKDIR /app/bin
 
 USER 65532:65532
 
-ENTRYPOINT ["./Sonarr"]
+ENTRYPOINT ["/app/bin/Sonarr"]
