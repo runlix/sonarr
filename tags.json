@@ -2,13 +2,13 @@
   "release": {
     "description": "release",
     "hide": false,
-    "last_updated": "2025-12-26T22:17:02.000Z",
-    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20530301863",
+    "last_updated": "2025-12-26T22:19:55.000Z",
+    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20530329596",
     "latest": true,
     "tags": [
       "release",
       "release-4.0.16.2944",
-      "release-28b6586"
+      "release-aba89d6"
     ]
   }
 }
