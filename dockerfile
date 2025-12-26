@@ -38,17 +38,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # STAGE 3 — distroless final image
 FROM ghcr.io/runlix/distroless-runtime:release
 
-# Debug: Verify files after COPY (using a temporary stage since distroless has no shell)
-FROM debian:bookworm-slim AS debug-check
-COPY --from=fetch /app /app
-RUN echo "DEBUG: Contents of /app after COPY:" && ls -la /app && \
-    echo "DEBUG: Contents of /app/bin after COPY:" && ls -la /app/bin 2>&1 | head -20 && \
-    echo "DEBUG: Sonarr binary check:" && test -f /app/bin/Sonarr && echo "Sonarr exists at /app/bin/Sonarr" || echo "Sonarr NOT found at /app/bin/Sonarr" && \
-    find /app -name "Sonarr" -type f 2>&1 || echo "Sonarr not found anywhere"
-
-# STAGE 3 — distroless final image
-FROM ghcr.io/runlix/distroless-runtime:release
-
 COPY --from=fetch /app /app
 COPY --from=sonarr-deps /usr/bin/sqlite3 /usr/bin/sqlite3
 COPY --from=sonarr-deps /usr/bin/ffmpeg /usr/bin/ffmpeg
