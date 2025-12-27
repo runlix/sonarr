@@ -73,4 +73,4 @@ WORKDIR /app/bin
 
 USER 65532:65532
 
-ENTRYPOINT ["/app/bin/Sonarr"]
+ENTRYPOINT ["/app/bin/Sonarr", "-nobrowser", "-data=/config"]
