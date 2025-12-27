@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDepTypes": ["base"],
+      "matchPackageNames": ["ghcr.io/runlix/distroless-runtime"],
+      "groupName": "Base Runtime Image"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDepTypes": ["base"],
+      "matchPackageNames": ["debian:bookworm-slim"],
+      "groupName": "Debian Base Image"
+    },
+    {
+      "matchManagers": ["json"],
+      "matchFiles": ["VERSION.json"],
+      "matchPackageNames": ["sonarr/sonarr"],
+      "groupName": "Sonarr Version"
+    }
+  ],
+  "jsonManagers": [
+    {
+      "fileMatch": ["^VERSION\\.json$"],
+      "matchStrings": [
+        "\"VERSION\":\\s*\"(?<currentValue>.*?)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "sonarr/sonarr",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ]
+}
