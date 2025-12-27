@@ -1,56 +1,73 @@
+# Global build args (available to all stages)
+ARG BASE_IMAGE=ghcr.io/runlix/distroless-runtime:release
+
 # STAGE 1 — fetch Sonarr binaries
 FROM debian:bookworm-slim AS fetch
 
 ARG VERSION
+ARG TARGETARCH=amd64
 ARG AMD64_URL
+ARG ARM64_URL
 ARG SBRANCH=main
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Use BuildKit cache mounts to persist apt cache between builds
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     tar \
-    file \
-    binutils \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /app/bin \
- && curl -L -f "${AMD64_URL}" -o sonarr.tar.gz \
- && echo "DEBUG: Archive contents:" && tar -tzf sonarr.tar.gz | head -20 \
+ && if [ "$TARGETARCH" = "arm64" ]; then \
+        curl -L -f "${ARM64_URL}" -o sonarr.tar.gz; \
+    else \
+        curl -L -f "${AMD64_URL}" -o sonarr.tar.gz; \
+    fi \
  && tar -xzf sonarr.tar.gz -C /app/bin --strip-components=1 \
- && echo "DEBUG: Contents of /app/bin after extraction:" && ls -la /app/bin | head -20 \
- && echo "DEBUG: Looking for Sonarr binary:" && find /app -name "Sonarr" -type f 2>&1 || echo "DEBUG: Sonarr not found" \
- && echo "DEBUG: Binary file type:" && file /app/bin/Sonarr 2>&1 || echo "DEBUG: file command failed" \
- && echo "DEBUG: Binary interpreter:" && readelf -l /app/bin/Sonarr 2>&1 | grep -A 1 "interpreter" || echo "DEBUG: readelf failed" \
- && echo "DEBUG: Binary dependencies:" && ldd /app/bin/Sonarr 2>&1 || echo "DEBUG: ldd failed (might be static or missing libs)" \
- && chmod +x /app/bin/Sonarr 2>&1 || echo "DEBUG: Failed to chmod Sonarr" \
+ && chmod +x /app/bin/Sonarr \
  && rm sonarr.tar.gz
 
 # STAGE 2 — install Sonarr-specific runtime packages
 FROM debian:bookworm-slim AS sonarr-deps
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Use BuildKit cache mounts to persist apt cache between builds
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     sqlite3 \
     ffmpeg \
     mediainfo \
-    file \
-    binutils \
  && rm -rf /var/lib/apt/lists/*
 
 # STAGE 3 — distroless final image
-FROM ghcr.io/runlix/distroless-runtime:release
+FROM ${BASE_IMAGE}
+
+# Set architecture-specific library directory
+ARG TARGETARCH=amd64
+ARG LIB_DIR=x86_64-linux-gnu
+# LIB_DIR will be set by build script for arm64 builds
 
 COPY --from=fetch /app /app
+# Copy binaries from sonarr-deps stage (kept separate for clarity)
 COPY --from=sonarr-deps /usr/bin/sqlite3 /usr/bin/sqlite3
 COPY --from=sonarr-deps /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=sonarr-deps /usr/bin/mediainfo /usr/bin/mediainfo
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libsqlite3.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libavcodec.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libavformat.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libavutil.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libswscale.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libmediainfo.so.* /usr/lib/x86_64-linux-gnu/
-COPY --from=sonarr-deps /usr/lib/x86_64-linux-gnu/libzen.so.* /usr/lib/x86_64-linux-gnu/
+# Copy shared libraries - combined into fewer layers by grouping related libraries
+# SQLite libraries
+COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libsqlite3.so.* /usr/lib/${LIB_DIR}/
+# FFmpeg libraries (avcodec, avformat, avutil, swscale)
+COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libavcodec.so.* \
+                        /usr/lib/${LIB_DIR}/libavformat.so.* \
+                        /usr/lib/${LIB_DIR}/libavutil.so.* \
+                        /usr/lib/${LIB_DIR}/libswscale.so.* \
+                        /usr/lib/${LIB_DIR}/
+# MediaInfo libraries (mediainfo, zen)
+COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libmediainfo.so.* \
+                        /usr/lib/${LIB_DIR}/libzen.so.* \
+                        /usr/lib/${LIB_DIR}/
 
 WORKDIR /app/bin
 
