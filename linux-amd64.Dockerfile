@@ -15,6 +15,9 @@ ARG PACKAGE_URL=""
 # Format: debian:bookworm-slim@sha256:digest (when digest provided)
 FROM docker.io/library/debian:${BUILDER_TAG}@${BUILDER_DIGEST} AS fetch
 
+# Redeclare ARG in this stage so it's available for use in RUN commands
+ARG PACKAGE_URL
+
 WORKDIR /app
 
 # Use BuildKit cache mounts to persist apt cache between builds
