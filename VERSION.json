@@ -33,7 +33,7 @@
         "image": "docker.io/library/debian",
         "tag": "bookworm-slim"
       },
-      "package_url": "url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz",
+      "package_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz",
       "dockerfile": "linux-amd64.Dockerfile",
       "enabled": true,
       "name": "sonarr-amd64-debug",
