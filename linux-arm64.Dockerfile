@@ -1,14 +1,19 @@
-# Global build args (available to all stages)
-ARG BASE_IMAGE=ghcr.io/runlix/distroless-runtime:release
+# Builder tag from VERSION.json builder.tag (e.g., "bookworm-slim")
+ARG BUILDER_TAG=bookworm-slim
+# Base tag (variant-arch) from VERSION.json base.tag (e.g., "release-2025.12.29.1-linux-arm64-latest")
+ARG BASE_TAG=release-2025.12.29.1-linux-arm64-latest
+# Selected digests (build script will set based on target configuration)
+# Default to empty string - build script should always provide valid digests
+# If empty, FROM will fail (which is desired to enforce digest pinning)
+ARG BUILDER_DIGEST=""
+ARG BASE_DIGEST=""
+# Package URL from VERSION.json packages[0].url
+ARG PACKAGE_URL=""
 
 # STAGE 1 — fetch Sonarr binaries
-FROM debian:bookworm-slim AS fetch
-
-ARG VERSION
-ARG TARGETARCH=amd64
-ARG AMD64_URL
-ARG ARM64_URL
-ARG SBRANCH=main
+# Build script will pass BUILDER_TAG and BUILDER_DIGEST from VERSION.json
+# Format: debian:bookworm-slim@sha256:digest (when digest provided)
+FROM docker.io/library/debian:${BUILDER_TAG}@${BUILDER_DIGEST} AS fetch
 
 WORKDIR /app
 
@@ -21,17 +26,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     tar \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /app/bin \
- && if [ "$TARGETARCH" = "arm64" ]; then \
-        curl -L -f "${ARM64_URL}" -o sonarr.tar.gz; \
-    else \
-        curl -L -f "${AMD64_URL}" -o sonarr.tar.gz; \
-    fi \
+ && curl -L -f "${PACKAGE_URL}" -o sonarr.tar.gz \
  && tar -xzf sonarr.tar.gz -C /app/bin --strip-components=1 \
  && chmod +x /app/bin/Sonarr \
  && rm sonarr.tar.gz
 
 # STAGE 2 — install Sonarr-specific runtime packages
-FROM debian:bookworm-slim AS sonarr-deps
+# Build script will pass BUILDER_TAG and BUILDER_DIGEST from VERSION.json
+FROM docker.io/library/debian:${BUILDER_TAG}@${BUILDER_DIGEST} AS sonarr-deps
 
 # Use BuildKit cache mounts to persist apt cache between builds
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -43,12 +45,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && rm -rf /var/lib/apt/lists/*
 
 # STAGE 3 — distroless final image
-FROM ${BASE_IMAGE}
+# Build script will pass BASE_TAG (from VERSION.json base.tag) and BASE_DIGEST
+# Format: ghcr.io/runlix/distroless-runtime:release-2025.12.29.1-linux-arm64-latest@sha256:digest (when digest provided)
+FROM ghcr.io/runlix/distroless-runtime:${BASE_TAG}@${BASE_DIGEST}
 
-# Set architecture-specific library directory
-ARG TARGETARCH=amd64
-ARG LIB_DIR=x86_64-linux-gnu
-# LIB_DIR will be set by build script for arm64 builds
+# Hardcoded for arm64 - no conditionals needed!
+ARG LIB_DIR=aarch64-linux-gnu
+ARG LD_SO=ld-linux-aarch64.so.1
 
 COPY --from=fetch /app /app
 # Copy binaries from sonarr-deps stage (kept separate for clarity)
@@ -70,7 +73,5 @@ COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libmediainfo.so.* \
                         /usr/lib/${LIB_DIR}/
 
 WORKDIR /app/bin
-
 USER 65532:65532
-
 ENTRYPOINT ["/app/bin/Sonarr", "-nobrowser", "-data=/config"]

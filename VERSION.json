@@ -1,7 +1,83 @@
 {
-  "version": "4.0.16.2944",
+  "build_date": "2025-12-27T11:33:09Z",
   "sbranch": "main",
-  "amd64_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz",
-  "arm64_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-arm64.tar.gz"
+  "targets": [
+    {
+      "arch": "linux-amd64",
+      "base": {
+        "digest": "sha256:6a2fca57b2fa9eb44997d1dbb59f79f043b49c15b6735e304671a3a98952c252",
+        "image": "ghcr.io/runlix/distroless-runtime",
+        "tag": "release-2025.12.29.1-linux-amd64-latest"
+      },
+      "builder": {
+        "digest": "sha256:ef5c368548841bdd8199a8606f6307402f7f2a2f8edc4acbc9c1c70c340bc023",
+        "image": "docker.io/library/debian",
+        "tag": "bookworm-slim"
+      },
+      "package_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz",
+      "dockerfile": "linux-amd64.Dockerfile",
+      "enabled": true,
+      "name": "sonarr-amd64-latest",
+      "tags": [],
+      "variant": "latest"
+    },
+    {
+      "arch": "linux-amd64",
+      "base": {
+        "digest": "sha256:5a1ca80401f02b93bdbc89f31f067081357225ea35f63ab5936d2b92904eb48a",
+        "image": "ghcr.io/runlix/distroless-runtime",
+        "tag": "release-2025.12.29.1-linux-amd64-debug"
+      },
+      "builder": {
+        "digest": "sha256:ef5c368548841bdd8199a8606f6307402f7f2a2f8edc4acbc9c1c70c340bc023",
+        "image": "docker.io/library/debian",
+        "tag": "bookworm-slim"
+      },
+      "package_url": "url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz",
+      "dockerfile": "linux-amd64.Dockerfile",
+      "enabled": true,
+      "name": "sonarr-amd64-debug",
+      "tags": [],
+      "variant": "debug"
+    },
+    {
+      "arch": "linux-arm64",
+      "base": {
+        "digest": "sha256:6b86ede466d8bfb7fba01c3143d29a527f35c7f97059306c9e8d2ebdb76d3f44",
+        "image": "ghcr.io/runlix/distroless-runtime",
+        "tag": "release-2025.12.29.1-linux-arm64-latest"
+      },
+      "builder": {
+        "digest": "sha256:ef5c368548841bdd8199a8606f6307402f7f2a2f8edc4acbc9c1c70c340bc023",
+        "image": "docker.io/library/debian",
+        "tag": "bookworm-slim"
+      },
+      "package_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-arm64.tar.gz",
+      "dockerfile": "linux-arm64.Dockerfile",
+      "enabled": true,
+      "name": "sonarr-arm64-latest",
+      "tags": [],
+      "variant": "latest"
+    },
+    {
+      "arch": "linux-arm64",
+      "base": {
+        "digest": "sha256:ca507efc2a7a9f35c603fbea0287e59d7782eb0a1d49a2b4660554db3b663343",
+        "image": "ghcr.io/runlix/distroless-runtime",
+        "tag": "release-2025.12.29.1-linux-arm64-debug"
+      },
+      "builder": {
+        "digest": "sha256:ef5c368548841bdd8199a8606f6307402f7f2a2f8edc4acbc9c1c70c340bc023",
+        "image": "docker.io/library/debian",
+        "tag": "bookworm-slim"
+      },
+      "package_url": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-arm64.tar.gz",
+      "dockerfile": "linux-arm64.Dockerfile",
+      "enabled": true,
+      "name": "sonarr-arm64-debug",
+      "tags": [],
+      "variant": "debug"
+    }
+  ],
+  "version": "4.0.16.2944"
 }
-
