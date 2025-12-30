@@ -4,10 +4,10 @@
   "extends": ["config:recommended"],
   "enabledManagers": ["custom.regex"],
 
-  /* renovate applies PRs only here */
+  /* allow PRs only into release/nightly */
   "baseBranches": ["nightly", "release"],
 
-  /* reduce noise */
+  /* reduce PR noise */
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
 
@@ -23,13 +23,13 @@
     }
   ],
 
-  /* keep pinned digests deterministic */
+  /* docker behavior must be top-level */
   "docker": {
     "pinDigests": true,
     "digestMode": "auto"
   },
 
-  /* ---- UPDATE PATHS FROM config.json → VERSION.json ---- */
+  /* regex-based extraction for VERSION.json */
   "customManagers": [
     {
       "customType": "regex",
@@ -50,7 +50,6 @@
       ]
     },
     {
-      /* Sonarr package_url bump */
       "customType": "regex",
       "managerFilePatterns": ["/^VERSION\\.json$/"],
       "datasourceTemplate": "github-releases",
@@ -61,7 +60,6 @@
       ]
     },
     {
-      /* update root "version" key */
       "customType": "regex",
       "managerFilePatterns": ["/^VERSION\\.json$/"],
       "datasourceTemplate": "github-releases",
