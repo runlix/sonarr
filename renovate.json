@@ -1,15 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
-  // renovate should only modify release/nightly
   "extends": ["config:recommended"],
-  "enabledManagers": ["regex"],
+  "enabledManagers": ["custom.regex"],
+
+  /* renovate applies PRs only here */
   "baseBranches": ["nightly", "release"],
 
-  // reduce noise
+  /* reduce noise */
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
 
+  /* group related updates */
   "packageRules": [
     {
       "matchDatasources": ["docker"],
@@ -21,81 +23,53 @@
     }
   ],
 
-  "regexManagers": [
-    // -----------------------------------------------------------
-    // Docker digests - builder images
-    // -----------------------------------------------------------
-    {
-      "fileMatch": ["^config\\.json$"],
-      "matchStrings": [
-        "\"builder\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker",
-      "extractVersion": "[a-zA-Z0-9._-]+"
-    },
-
-    // -----------------------------------------------------------
-    // Docker digests - base images
-    // -----------------------------------------------------------
-    {
-      "fileMatch": ["^config\\.json$"],
-      "matchStrings": [
-        "\"base\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker",
-      "extractVersion": "[a-zA-Z0-9._-]+"
-    },
-
-    // -----------------------------------------------------------
-    // Sonarr package_url bump (both x64 + arm64 variants)
-    //
-    // Example:
-    // https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz
-    //
-    // capture:
-    //   currentValue   → v4.0.16.2944   (folder)
-    //   currentVersion → 4.0.16.2944    (filename)
-    // -----------------------------------------------------------
-    {
-      "fileMatch": ["^config\\.json$"],
-      "matchStrings": [
-        "\"package_url\":\\s*\"https://github.com/(?<org>[^/]+)/(?<repo>[^/]+)/releases/download/v(?<currentValue>[^/]+)/Sonarr\\.main\\.(?<currentVersion>[^/]+)\\.linux-(?<arch>[^.]+)\\.tar\\.gz\""
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "{{org}}/{{repo}}",
-      "versioningTemplate": "semver"
-    },
-
-    // -----------------------------------------------------------
-    // Root version alignment with Sonarr release
-    // (updates `"version": "4.0.16.2944"`)
-    // -----------------------------------------------------------
-    {
-      "fileMatch": ["^config\\.json$"],
-      "matchStrings": [
-        "\"version\":\\s*\"(?<currentValue>.*?)\""
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "Sonarr/Sonarr",
-      "versioningTemplate": "semver"
-    }
-  ],
-
-  // -----------------------------------------------------------
-  // Docker behavior
-  // -----------------------------------------------------------
+  /* keep pinned digests deterministic */
   "docker": {
     "pinDigests": true,
     "digestMode": "auto"
-  }
+  },
 
-  // -----------------------------------------------------------
-  // Optional schedule: enable if you want nightly updates only
-  // -----------------------------------------------------------
-  /*
-  ,
-  "schedule": ["after 1am and before 3am"]
-  */
+  /* ---- UPDATE PATHS FROM config.json → VERSION.json ---- */
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^VERSION\\.json$/"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "matchStrings": [
+        "\"builder\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^VERSION\\.json$/"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "matchStrings": [
+        "\"base\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ]
+    },
+    {
+      /* Sonarr package_url bump */
+      "customType": "regex",
+      "managerFilePatterns": ["/^VERSION\\.json$/"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "{{org}}/{{repo}}",
+      "versioningTemplate": "semver",
+      "matchStrings": [
+        "\"package_url\":\\s*\"https://github.com/(?<org>[^/]+)/(?<repo>[^/]+)/releases/download/v(?<currentValue>[^/]+)/Sonarr\\.main\\.(?<currentVersion>[^/]+)\\.linux-(?<arch>[^.]+)\\.tar\\.gz\""
+      ]
+    },
+    {
+      /* update root "version" key */
+      "customType": "regex",
+      "managerFilePatterns": ["/^VERSION\\.json$/"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "Sonarr/Sonarr",
+      "versioningTemplate": "semver",
+      "matchStrings": [
+        "\"version\":\\s*\"(?<currentValue>.*?)\""
+      ]
+    }
+  ]
 }
