@@ -120,5 +120,27 @@
       "update-digests-20597321606-1767100496-4.0.16.2944-latest",
       "update-digests-20597321606-1767100496-bd9c7f5-latest"
     ]
+  },
+  "update-digests-20598826604-1767105165-debug": {
+    "description": "update-digests-20598826604-1767105165-debug",
+    "hide": false,
+    "last_updated": "2025-12-30T14:41:32.000Z",
+    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20598853986",
+    "tags": [
+      "update-digests-20598826604-1767105165-debug",
+      "update-digests-20598826604-1767105165-4.0.16.2944-debug",
+      "update-digests-20598826604-1767105165-4e71c49-debug"
+    ]
+  },
+  "update-digests-20598826604-1767105165-latest": {
+    "description": "update-digests-20598826604-1767105165-latest",
+    "hide": false,
+    "last_updated": "2025-12-30T14:41:32.000Z",
+    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20598853986",
+    "tags": [
+      "update-digests-20598826604-1767105165-latest",
+      "update-digests-20598826604-1767105165-4.0.16.2944-latest",
+      "update-digests-20598826604-1767105165-4e71c49-latest"
+    ]
   }
 }
