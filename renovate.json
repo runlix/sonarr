@@ -1,37 +1,101 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+
+  // renovate should only modify release/nightly
+  "extends": ["config:recommended"],
+  "enabledManagers": ["regex"],
+  "baseBranches": ["nightly", "release"],
+
+  // reduce noise
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+
   "packageRules": [
     {
-      "matchManagers": ["dockerfile"],
-      "matchDepTypes": ["base"],
-      "matchPackageNames": ["ghcr.io/runlix/distroless-runtime"],
-      "groupName": "Base Runtime Image"
+      "matchDatasources": ["docker"],
+      "groupName": "docker-digest updates"
     },
     {
-      "matchManagers": ["dockerfile"],
-      "matchDepTypes": ["base"],
-      "matchPackageNames": ["debian:bookworm-slim"],
-      "groupName": "Debian Base Image"
-    },
-    {
-      "matchManagers": ["json"],
-      "matchFiles": ["VERSION.json"],
-      "matchPackageNames": ["sonarr/sonarr"],
-      "groupName": "Sonarr Version"
+      "matchDatasources": ["github-releases"],
+      "groupName": "sonarr version bump"
     }
   ],
-  "jsonManagers": [
+
+  "regexManagers": [
+    // -----------------------------------------------------------
+    // Docker digests - builder images
+    // -----------------------------------------------------------
     {
-      "fileMatch": ["^VERSION\\.json$"],
+      "fileMatch": ["^config\\.json$"],
       "matchStrings": [
-        "\"VERSION\":\\s*\"(?<currentValue>.*?)\""
+        "\"builder\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "extractVersion": "[a-zA-Z0-9._-]+"
+    },
+
+    // -----------------------------------------------------------
+    // Docker digests - base images
+    // -----------------------------------------------------------
+    {
+      "fileMatch": ["^config\\.json$"],
+      "matchStrings": [
+        "\"base\":\\s*\\{[\\s\\S]*?\"image\":\\s*\"(?<depName>.*?)\",[\\s\\S]*?\"tag\":\\s*\"(?<currentValue>.*?)\",[\\s\\S]*?\"digest\":\\s*\"(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "extractVersion": "[a-zA-Z0-9._-]+"
+    },
+
+    // -----------------------------------------------------------
+    // Sonarr package_url bump (both x64 + arm64 variants)
+    //
+    // Example:
+    // https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz
+    //
+    // capture:
+    //   currentValue   → v4.0.16.2944   (folder)
+    //   currentVersion → 4.0.16.2944    (filename)
+    // -----------------------------------------------------------
+    {
+      "fileMatch": ["^config\\.json$"],
+      "matchStrings": [
+        "\"package_url\":\\s*\"https://github.com/(?<org>[^/]+)/(?<repo>[^/]+)/releases/download/v(?<currentValue>[^/]+)/Sonarr\\.main\\.(?<currentVersion>[^/]+)\\.linux-(?<arch>[^.]+)\\.tar\\.gz\""
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "sonarr/sonarr",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "depNameTemplate": "{{org}}/{{repo}}",
+      "versioningTemplate": "semver"
+    },
+
+    // -----------------------------------------------------------
+    // Root version alignment with Sonarr release
+    // (updates `"version": "4.0.16.2944"`)
+    // -----------------------------------------------------------
+    {
+      "fileMatch": ["^config\\.json$"],
+      "matchStrings": [
+        "\"version\":\\s*\"(?<currentValue>.*?)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "Sonarr/Sonarr",
+      "versioningTemplate": "semver"
     }
-  ]
+  ],
+
+  // -----------------------------------------------------------
+  // Docker behavior
+  // -----------------------------------------------------------
+  "docker": {
+    "pinDigests": true,
+    "digestMode": "auto"
+  }
+
+  // -----------------------------------------------------------
+  // Optional schedule: enable if you want nightly updates only
+  // -----------------------------------------------------------
+  /*
+  ,
+  "schedule": ["after 1am and before 3am"]
+  */
 }
