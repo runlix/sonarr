@@ -1,4 +1,4 @@
-# Sonarr Distroless
+# Sonarr Distroless 
 
 Kubernetes-native distroless Docker image for [Sonarr](https://github.com/sonarr/sonarr).
 
