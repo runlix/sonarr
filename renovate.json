@@ -1,18 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
-  "extends": ["config:recommended"],
-  "enabledManagers": ["custom.regex"],
+  "extends": [
+    "mergeConfidence:all-badges",
+    "config:recommended"
+  ],
 
-  /* allow PRs only into release/nightly */
+  "enabledManagers": ["custom.regex"],
   "baseBranches": ["nightly", "release"],
 
-  /* reduce PR noise */
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
 
-  /* group related updates */
+  /* override to silence the migrated invalid field */
   "packageRules": [
+    {
+      "matchCategories": ["docker"],
+      "digestMode": null
+    },
     {
       "matchDatasources": ["docker"],
       "groupName": "docker-digest updates"
@@ -23,13 +28,11 @@
     }
   ],
 
-  /* docker behavior must be top-level */
   "docker": {
     "pinDigests": true,
     "digestMode": "auto"
   },
 
-  /* regex-based extraction for VERSION.json */
   "customManagers": [
     {
       "customType": "regex",
