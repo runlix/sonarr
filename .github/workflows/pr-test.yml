@@ -10,4 +10,4 @@ on:
 jobs:
   test:
     uses: runlix/build-workflow/.github/workflows/test-on-pr.yml@main
-
+    secrets: inherit
