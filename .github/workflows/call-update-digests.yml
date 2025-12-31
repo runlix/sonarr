@@ -1,0 +1,15 @@
+name: call-update-digests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+    
+jobs:
+  call:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: runlix/build-workflow/.github/workflows/update-digests-on-call.yml@main
+    secrets: inherit
+
