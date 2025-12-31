@@ -2,7 +2,9 @@ name: call-update-digests
 
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: "0 0 * * *"
+    
 jobs:
   call:
     permissions:
