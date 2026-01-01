@@ -1,11 +1,11 @@
 {
-  "build_date": "2025-12-31T15:32:29Z",
+  "build_date": "2026-01-01T07:57:02Z",
   "sbranch": "main",
   "targets": [
     {
       "arch": "linux-amd64",
       "base": {
-        "digest": "sha256:1cfc4d6f8750c53318883b97910bdbccda4e22549fd6324e3739a661aa6848ef",
+        "digest": "sha256:84c0f7bdb233bd276f4aecd7cef9109990a19c71579feb508021c9b86407a20f",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-2025.12.29.1-linux-amd64-latest"
       },
