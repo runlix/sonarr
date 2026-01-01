@@ -10,6 +10,6 @@ jobs:
     permissions:
       contents: write
       packages: write
-    uses: runlix/build-workflow/.github/workflows/build-on-merge.yml@main
+    uses: runlix/build-workflow/.github/workflows/on-merge.yml@main
     secrets: inherit
 
