@@ -1,6 +1,10 @@
-# Sonarr Distroless
+# Sonarr
 
-Kubernetes-native distroless Docker image for [Sonarr](https://github.com/sonarr/sonarr).
+Kubernetes-native distroless Docker image for [Sonarr](https://github.com/sonarr/sonarr) - a TV show collection manager.
+
+## Purpose
+
+Provides a minimal, secure Docker image for running Sonarr in Kubernetes environments. Built on the `distroless-runtime` base image with only the essential dependencies required for Sonarr to function.
 
 ## Features
 
@@ -19,7 +23,7 @@ docker run -d \
   --name sonarr \
   -p 8989:8989 \
   -v /path/to/config:/config \
-  ghcr.io/runlix/sonarr-distroless:release
+  ghcr.io/runlix/sonarr:release-latest
 ```
 
 ### Kubernetes
@@ -34,7 +38,7 @@ spec:
     spec:
       containers:
       - name: sonarr
-        image: ghcr.io/runlix/sonarr-distroless:release
+        image: ghcr.io/runlix/sonarr:release-latest
         ports:
         - containerPort: 8989
         volumeMounts:
@@ -66,19 +70,3 @@ See [tags.json](tags.json) for available tags.
 ## License
 
 GPL-3.0
-```
-
-**`links.json`** (main branch):
-```json
-{
-  "links": [
-    {
-      "name": "Upstream Project",
-      "url": "https://github.com/sonarr/sonarr"
-    },
-    {
-      "name": "Sonarr Wiki",
-      "url": "https://wiki.servarr.com/sonarr"
-    }
-  ]
-}
