@@ -5,7 +5,7 @@
     {
       "arch": "linux-amd64",
       "base": {
-        "digest": "sha256:7249f249cc4e8c8dccf96f5f87ec5759c4464120bf34f702570e5cc9dd6e6edb",
+        "digest": "sha256:1cfc4d6f8750c53318883b97910bdbccda4e22549fd6324e3739a661aa6848ef",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-2025.12.29.1-linux-amd64-latest"
       },
