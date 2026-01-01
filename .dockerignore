@@ -3,7 +3,8 @@ README.md
 *.md
 
 # Build scripts
-build-local.sh
+update-digests.sh
+update-versions.sh
 
 # Git files
 .git
@@ -14,7 +15,8 @@ build-local.sh
 
 # Metadata files
 tags.json
-renovate.json
+links.json
+
 # Note: VERSION.json is excluded since values are passed as build args
 
 # IDE files
