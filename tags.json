@@ -14,23 +14,23 @@
   "release-debug": {
     "description": "release-debug",
     "hide": false,
-    "last_updated": "2026-01-01T08:48:47.000Z",
-    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20635642166",
+    "last_updated": "2026-01-05T10:29:22.000Z",
+    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20710602756",
     "tags": [
       "release-debug",
       "release-4.0.16.2944-debug",
-      "release-ba714ca-debug"
+      "release-e90b737-debug"
     ]
   },
   "release-latest": {
     "description": "release-latest",
     "hide": false,
-    "last_updated": "2026-01-01T08:48:47.000Z",
-    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20635642166",
+    "last_updated": "2026-01-05T10:29:22.000Z",
+    "last_updated_url": "https://github.com/runlix/sonarr/actions/runs/20710602756",
     "tags": [
       "release-latest",
       "release-4.0.16.2944-latest",
-      "release-ba714ca-latest"
+      "release-e90b737-latest"
     ]
   }
 }
