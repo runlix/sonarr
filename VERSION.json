@@ -1,11 +1,11 @@
 {
-  "build_date": "2026-01-24T01:09:24Z",
+  "build_date": "2026-01-30T01:22:21Z",
   "sbranch": "main",
   "targets": [
     {
       "arch": "linux-amd64",
       "base": {
-        "digest": "sha256:4ef61f35c87e4eb6144f362c39f8e30ad4b4937f6011cd715ba0cfe7db05a10a",
+        "digest": "sha256:51817fa6369df5cf510fa757ceb9d7fe2c9176502ba1b05806a0d6e71e007dc7",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-latest"
       },
@@ -24,7 +24,7 @@
     {
       "arch": "linux-amd64",
       "base": {
-        "digest": "sha256:7ecb408f77e55ac0db59ae2f0355d66f3a4b46f0841c18861e05d145c6609f92",
+        "digest": "sha256:a35635e457fd07945e8c3d5063d333a5a30af345fcfd235faa25598ed740a3a2",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-debug"
       },
@@ -43,7 +43,7 @@
     {
       "arch": "linux-arm64",
       "base": {
-        "digest": "sha256:4ef61f35c87e4eb6144f362c39f8e30ad4b4937f6011cd715ba0cfe7db05a10a",
+        "digest": "sha256:51817fa6369df5cf510fa757ceb9d7fe2c9176502ba1b05806a0d6e71e007dc7",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-latest"
       },
@@ -62,7 +62,7 @@
     {
       "arch": "linux-arm64",
       "base": {
-        "digest": "sha256:7ecb408f77e55ac0db59ae2f0355d66f3a4b46f0841c18861e05d145c6609f92",
+        "digest": "sha256:a35635e457fd07945e8c3d5063d333a5a30af345fcfd235faa25598ed740a3a2",
         "image": "ghcr.io/runlix/distroless-runtime",
         "tag": "release-debug"
       },
