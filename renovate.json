@@ -70,6 +70,12 @@
       "commitMessageTopic": "Distroless runtime base image"
     },
     {
+      "description": "Use regex versioning for Sonarr 4-part versions - https://docs.renovatebot.com/modules/versioning/regex/",
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["Sonarr/Sonarr"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$"
+    },
+    {
       "description": "Group Sonarr version and package URL updates",
       "matchDatasources": ["github-releases"],
       "matchPackageNames": ["Sonarr/Sonarr"],
