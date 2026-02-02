@@ -1,5 +1,5 @@
 {
-  "version": "4.0.14.2939",
+  "version": "4.0.16.2944",
   "variants": [
     {
       "name": "latest-amd64",
@@ -18,7 +18,7 @@
         "BASE_IMAGE": "ghcr.io/runlix/distroless-runtime",
         "BASE_TAG": "stable",
         "BASE_DIGEST": "sha256:3b1c6c4f5d904070a72ebfc409cd296ffad717b2202233aef3a1702568c6e684",
-        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.14.2939/Sonarr.main.4.0.14.2939.linux-x64.tar.gz"
+        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz"
       },
       "test_script": ".ci/smoke-test.sh"
     },
@@ -39,7 +39,7 @@
         "BASE_IMAGE": "ghcr.io/runlix/distroless-runtime",
         "BASE_TAG": "stable",
         "BASE_DIGEST": "sha256:69c8ef8fb791b563fe612e8ab23efa97f224635d057b18203c2befba280628f4",
-        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.14.2939/Sonarr.main.4.0.14.2939.linux-arm64.tar.gz"
+        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-arm64.tar.gz"
       },
       "test_script": ".ci/smoke-test.sh"
     },
@@ -60,7 +60,7 @@
         "BASE_IMAGE": "ghcr.io/runlix/distroless-runtime",
         "BASE_TAG": "debug",
         "BASE_DIGEST": "sha256:cd246ef1b6e8ef3ddb3b471cb6af13132e2af38f69fc18c77fff8a97bf351a97",
-        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.14.2939/Sonarr.main.4.0.14.2939.linux-x64.tar.gz"
+        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-x64.tar.gz"
       },
       "test_script": ".ci/smoke-test.sh"
     },
@@ -81,7 +81,7 @@
         "BASE_IMAGE": "ghcr.io/runlix/distroless-runtime",
         "BASE_TAG": "debug",
         "BASE_DIGEST": "sha256:8e90e3a86b12cb96706cff3ee6fcfd44e5a5f5d58993cb895a69de6ecd309cdb",
-        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.14.2939/Sonarr.main.4.0.14.2939.linux-arm64.tar.gz"
+        "PACKAGE_URL": "https://github.com/Sonarr/Sonarr/releases/download/v4.0.16.2944/Sonarr.main.4.0.16.2944.linux-arm64.tar.gz"
       },
       "test_script": ".ci/smoke-test.sh"
     }
