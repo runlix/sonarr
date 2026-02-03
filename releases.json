@@ -1,9 +1,9 @@
 {
   "sonarr": {
     "version": "4.0.16.2944",
-    "sha": "b90c6438ced47a276133021e277f67523a39d33a",
-    "short_sha": "b90c643",
-    "timestamp": "2026-02-02T13:30:54Z",
+    "sha": "b7e5f7df25e4a5e4eb567f510e0968e1c73873e4",
+    "short_sha": "b7e5f7d",
+    "timestamp": "2026-02-03T11:58:48Z",
     "manifests": [
       "4.0.16.2944-debug",
       "4.0.16.2944-stable"
