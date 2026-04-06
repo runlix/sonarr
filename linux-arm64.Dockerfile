@@ -1,19 +1,8 @@
-# Builder tag from VERSION.json builder.tag (e.g., "bookworm-slim")
-ARG BUILDER_TAG=bookworm-slim
-# Base tag (variant-arch) from VERSION.json base.tag (e.g., "release-2025.12.29.1-linux-arm64-latest")
-ARG BASE_TAG=release-2025.12.29.1-linux-arm64-latest
-# Selected digests (build script will set based on target configuration)
-# Default to empty string - build script should always provide valid digests
-# If empty, FROM will fail (which is desired to enforce digest pinning)
-ARG BUILDER_DIGEST=""
-ARG BASE_DIGEST=""
-# Package URL from VERSION.json packages[0].url
-ARG PACKAGE_URL=""
+ARG BUILDER_REF="docker.io/library/debian:bookworm-slim@sha256:ee5473f786ff8a4e03409277c276b459b29afa55a84268bef55342c4f705b7ad"
+ARG BASE_REF="ghcr.io/runlix/distroless-runtime-v2-canary:stable@sha256:6f96f11dbb9d8f6e76672e73bbf743dbec36d2e4f6d29250151a48379a8c66dd"
+ARG PACKAGE_URL="https://github.com/Sonarr/Sonarr/releases/download/v4.0.17.2952/Sonarr.main.4.0.17.2952.linux-arm64.tar.gz"
 
-# STAGE 1 — fetch Sonarr binaries
-# Build script will pass BUILDER_TAG and BUILDER_DIGEST from VERSION.json
-# Format: debian:bookworm-slim@sha256:digest (when digest provided)
-FROM docker.io/library/debian:${BUILDER_TAG}@${BUILDER_DIGEST} AS fetch
+FROM ${BUILDER_REF} AS fetch
 
 # Redeclare ARG in this stage so it's available for use in RUN commands
 ARG PACKAGE_URL
@@ -34,9 +23,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && chmod +x /app/bin/Sonarr \
  && rm sonarr.tar.gz
 
-# STAGE 2 — install Sonarr-specific runtime packages
-# Build script will pass BUILDER_TAG and BUILDER_DIGEST from VERSION.json
-FROM docker.io/library/debian:${BUILDER_TAG}@${BUILDER_DIGEST} AS sonarr-deps
+FROM ${BUILDER_REF} AS sonarr-deps
 
 # Use BuildKit cache mounts to persist apt cache between builds
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -47,30 +34,20 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     mediainfo \
  && rm -rf /var/lib/apt/lists/*
 
-# STAGE 3 — distroless final image
-# Build script will pass BASE_TAG (from VERSION.json base.tag) and BASE_DIGEST
-# Format: ghcr.io/runlix/distroless-runtime:release-2025.12.29.1-linux-arm64-latest@sha256:digest (when digest provided)
-FROM ghcr.io/runlix/distroless-runtime:${BASE_TAG}@${BASE_DIGEST}
+FROM ${BASE_REF}
 
-# Hardcoded for arm64 - no conditionals needed!
 ARG LIB_DIR=aarch64-linux-gnu
-ARG LD_SO=ld-linux-aarch64.so.1
 
 COPY --from=fetch /app /app
-# Copy binaries from sonarr-deps stage (kept separate for clarity)
 COPY --from=sonarr-deps /usr/bin/sqlite3 /usr/bin/sqlite3
 COPY --from=sonarr-deps /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=sonarr-deps /usr/bin/mediainfo /usr/bin/mediainfo
-# Copy shared libraries - combined into fewer layers by grouping related libraries
-# SQLite libraries
 COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libsqlite3.so.* /usr/lib/${LIB_DIR}/
-# FFmpeg libraries (avcodec, avformat, avutil, swscale)
 COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libavcodec.so.* \
                         /usr/lib/${LIB_DIR}/libavformat.so.* \
                         /usr/lib/${LIB_DIR}/libavutil.so.* \
                         /usr/lib/${LIB_DIR}/libswscale.so.* \
                         /usr/lib/${LIB_DIR}/
-# MediaInfo libraries (mediainfo, zen)
 COPY --from=sonarr-deps /usr/lib/${LIB_DIR}/libmediainfo.so.* \
                         /usr/lib/${LIB_DIR}/libzen.so.* \
                         /usr/lib/${LIB_DIR}/
