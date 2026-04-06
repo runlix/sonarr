@@ -1,71 +1,58 @@
 # Sonarr
 
-Kubernetes-native distroless Docker image for [Sonarr](https://github.com/sonarr/sonarr) - a TV show collection manager.
+`sonarr` publishes the Runlix container image for [Sonarr](https://github.com/Sonarr/Sonarr).
 
-## Purpose
+The current published image name is:
 
-Provides a minimal, secure Docker image for running Sonarr in Kubernetes environments. Built on the `distroless-runtime` base image with only the essential dependencies required for Sonarr to function.
-
-## Features
-
-- Distroless base (no shell, minimal attack surface)
-- Kubernetes-native permissions (no s6-overlay)
-- Read-only root filesystem
-- Non-root execution
-- Minimal image size (~100MB vs ~500MB)
-
-## Usage
-
-### Docker
-
-```bash
-docker run -d \
-  --name sonarr \
-  -p 8989:8989 \
-  -v /path/to/config:/config \
-  ghcr.io/runlix/sonarr:release-latest
+```text
+ghcr.io/runlix/sonarr
 ```
 
-### Kubernetes
+Use a versioned stable manifest tag from [release.json](release.json):
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: sonarr
-spec:
-  template:
-    spec:
-      containers:
-      - name: sonarr
-        image: ghcr.io/runlix/sonarr:release-latest
-        ports:
-        - containerPort: 8989
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        securityContext:
-          runAsUser: 1012
-          runAsGroup: 1011
-          supplementalGroups: [1010, 1003]
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop: ["ALL"]
-      volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: sonarr-config
-      securityContext:
-        fsGroup: 1011
+```dockerfile
+FROM ghcr.io/runlix/sonarr:<version>-stable
 ```
 
-## Tags
+The authoritative published tags, digests, and source revision live in [release.json](release.json).
 
-See [tags.json](tags.json) for available tags.
+## What's Included
+
+- Sonarr upstream binaries
+- `sqlite3`
+- `ffmpeg`
+- `mediainfo`
+- shared runtime libraries from `distroless-runtime-v2-canary`
+
+The image keeps the distroless runtime model while layering in the Sonarr-specific binaries and media tooling it needs.
+
+## Branch Layout
+
+`main` owns metadata and automation config:
+
+- `README.md`
+- `links.json`
+- `release.json`
+- `renovate.json`
+- `.github/workflows/validate-release-metadata.yml`
+
+`release` owns build and publish inputs:
+
+- `.ci/build.json`
+- `.ci/smoke-test.sh`
+- `linux-*.Dockerfile`
+- `.github/workflows/validate-build.yml`
+- `.github/workflows/publish-release.yml`
+
+## Release Flow
+
+Changes merge to `release`, where `Publish Release` builds the versioned `stable` and `debug` multi-arch manifests, attests them, optionally sends Telegram, and opens the sync PR back to `main`.
+
+`main` validates metadata and config-only changes with `Validate Release Metadata`.
 
 ## Environment Variables
 
-- `SONARR__SERVER__PORT`: Server port (default: 8989)
+- `SONARR__SERVER__PORT`: server port, default `8989`
 
 ## License
 
