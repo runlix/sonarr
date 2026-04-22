@@ -1,13 +1,13 @@
 {
   "image": "ghcr.io/runlix/sonarr",
   "version": "4.0.17.2952",
-  "sha": "0c76e82f9318231da96aaa34257337d7670647ef",
-  "short_sha": "0c76e82",
-  "published_at": "2026-04-10T05:19:25Z",
+  "sha": "41710c39bb7dd986aa1f73200dff22e6eb4b5180",
+  "short_sha": "41710c3",
+  "published_at": "2026-04-22T03:07:18Z",
   "manifests": [
     {
       "tag": "4.0.17.2952-debug",
-      "digest": "sha256:a83a21be1c83f2bad8312bc23a81152bdc2fb1e2cc6731d4ad31b8598e224191",
+      "digest": "sha256:2697ce21ddbd4525a8f2321dafbca49b3b6b5733a1544479652f603571480cf5",
       "platforms": [
         "linux/amd64",
         "linux/arm64"
@@ -15,7 +15,7 @@
     },
     {
       "tag": "4.0.17.2952-stable",
-      "digest": "sha256:57966565a18a0fbc3255272add90749fc67091752ce7fd9dded1659ba996f634",
+      "digest": "sha256:9e9df348243e7043f5dc171fe2de7bf8e2f929d015afbca7f66701b02f8faf29",
       "platforms": [
         "linux/amd64",
         "linux/arm64"
