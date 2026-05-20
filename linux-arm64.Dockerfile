@@ -1,5 +1,5 @@
 ARG BUILDER_REF="docker.io/library/debian:bookworm-slim@sha256:f1433d3ee18e12f45682b29d91b6356e54e40d6b47f5f8ac81e80f35cca8cfe7"
-ARG BASE_REF="ghcr.io/runlix/distroless-runtime-v2-canary:stable@sha256:111187cf8b6644f9779a9b654dce1d33bc194a1a8f5434b583d1c036420a28fa"
+ARG BASE_REF="ghcr.io/runlix/distroless-runtime-v2-canary:stable@sha256:7b02520205fe4ba31191c32dfff3ff38cba0990b6f1f6c95e189d58b82522240"
 ARG PACKAGE_URL="https://github.com/Sonarr/Sonarr/releases/download/v4.0.17.2952/Sonarr.main.4.0.17.2952.linux-arm64.tar.gz"
 
 FROM ${BUILDER_REF} AS fetch
